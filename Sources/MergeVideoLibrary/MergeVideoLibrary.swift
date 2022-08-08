@@ -34,8 +34,8 @@ public class MergeVideoLibrary: NSObject {
     }
 
     @objc (firstVideoURL:audioURL:)
-    func mergeVideo(firstVideoURL: URL?, audioURL: URL?) -> URL? {
-        guard let firstVideoURL = firstVideoURL, let secondVideoUrl = secondVideoURL, let audioURL = audioURL else { return nil }
+    func mergeVideo(_ firstVideoURL: String?, audioURL: String?) -> String? {
+        guard let firstVideoURL = URL(string: firstVideoURL ?? ""), let secondVideoUrl = secondVideoURL, let audioURL = URL(string: audioURL ?? "") else { return nil }
         let firstAsset = AVAsset(url: firstVideoURL)
         let secondAsset = AVAsset(url: secondVideoUrl)
         let audioAsset = AVAsset(url: audioURL)
@@ -123,7 +123,7 @@ public class MergeVideoLibrary: NSObject {
         exporter.exportAsynchronously { [weak self] in
             switch exporter.status {
             case .completed:
-                guard let exporterOutputURL = exporter.outputURL else { return}
+                guard let exporterOutputURL = exporter.outputURL else { return }
                 DispatchQueue.main.async {
                     self?.compressFile(exporterOutputURL) { (compressedURL) in
                          finalUrl = compressedURL
@@ -137,7 +137,8 @@ public class MergeVideoLibrary: NSObject {
                 break
             }
         }
-        return finalUrl
+        guard let finalUrl = finalUrl else { return nil }
+        return String(describing: finalUrl)
     }
 
     private func removeUrlFromFileManager(_ outputFileURL: URL?) {

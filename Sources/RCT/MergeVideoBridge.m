@@ -9,6 +9,6 @@
 
 @interface RCT_EXTERN_MODULE(MergeVideoLibrary, NSObject)
 
-RCT_EXTERN_METHOD(firstVideoURL:(NSURL *)firstVideoURL audioURL:(NSURL *)audioURL)
+RCT_EXTERN_METHOD(mergeVideo:(NSString *)firstVideoURL audioURL:(NSString *)audioURL)
 
 @end
